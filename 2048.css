@@ -1,95 +1,79 @@
-html,body{
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 50px;
-}
-.wrap{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-}
-h4{
-    text-align: center;
-    margin-bottom: .3rem;
-    margin-top: .2rem;
-    color: chocolate;
-}
-.score{
-    font-size: .4rem;
-    text-align: center;
-    color: dimgray;
-    margin-bottom: 0.8rem;
-}
-.score span{
-    color: gold;
-}
-.game-field{
-    width: 12rem;
-    height: 12rem;
-    border-radius: .2rem;
-    background-color: peru;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    padding-top: 0.5rem;
-}
-.row{
-    width:12rem;
-    height:2.7rem;
-    text-align: center;
-    margin-bottom: 0.3rem;
-}
-.row-item{
-    width:2.6rem;
-    height:2.6rem;
-    border-radius: .1rem;
-    display:inline-block;
-    background-color: wheat;
-    vertical-align: middle;
-    line-height: 2.6rem;
-    font-size: 1rem;
-    font-weight: bold;
-}
-.active{
-    background-color: rgb(218, 213, 213);
-}
-.glory{
-    box-shadow: 0 0 1rem yellow;
-}
-.item-num-2{
-    color: seagreen;
-}
-.item-num-4{
-    color: dodgerblue;
-}
-.item-num-8{
-    color: darkred;
-}
-.item-num-16{
-    color: darkslategray;
-}
-.item-num-32{
-    color: rgb(240, 59, 225);
-}
-.item-num-64{
-    color: rgb(177, 235, 19);
-}
-.item-num-128{
-    color: rgb(73, 90, 247);
-}
-.item-num-256{
-    color: rgb(223, 114, 13);
-}
-.item-num-512{
-    color: rgb(81, 91, 240);
-}
-.item-num-1024{
-    color: rgb(24, 196, 187);
-}
-.item-num-2048{
-    color: rgb(228, 41, 172);
-}
+    html,body{
+        padding:0;
+        margin:0;
+        font-size: 50px;
+    }
+    h4{
+        text-align: center;
+        margin: .3rem;
+        color:chocolate;
+    }
+    
+    #game-field{
+        width:12rem;
+        margin: 0 auto;
+    }
+    .controller {
+        text-align: center;
+        font-size: .5rem;
+        margin-bottom :.5rem;
+    }
+    .controller .button{
+        background-color:rgb(40, 123, 247);
+        color:white;
+        padding:.1rem;
+        border-radius:.1rem;
+    }
+    .controller span{
+        color: gold;
+    }
+    #game-field .content{
+        width:12rem;
+        height:12rem;
+        background-color:peru;
+        border-radius:.1rem;
+        margin-top:.2rem;
+        position: relative;
+    }
+    #game-field .content .bg-cell,
+    #game-field .content .cell{
+        position: absolute;
+        width:2.6rem;
+        height:2.6rem;
+        background-color:#7e7a5b;
+        border-radius:.1rem;
+        transition:200ms;
+    }
+    #game-field .content .cell{
+        background-color: #ffcb38;
+        opacity:.8;
+        font-size:60px;
+        font-weight:bold;
+        line-height:2.5rem;
+        text-align: center;
+        color: #faf7f4;
+    }
+    .row0{
+        top:.5rem;
+    }
+    .row1{
+        top:3.3rem;
+    }
+    .row2{
+        top:6.1rem;
+    }
+    .row3{
+        top:8.9rem;
+    }
+    .col0{
+        left:.5rem;
+    }
+    .col1{
+        left:3.3rem;
+    }
+    .col2{
+        left:6.1rem;
+    }
+    .col3{
+        left:8.9rem;
+    }
