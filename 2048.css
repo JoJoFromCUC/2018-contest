@@ -9,10 +9,11 @@ html,body{
     width: 100%;
     height: 100%;
     position: relative;
+    overflow: hidden;
 }
 h4{
     text-align: center;
-    margin-bottom: .5rem;
+    margin-bottom: .3rem;
     margin-top: .2rem;
     color: chocolate;
 }
@@ -20,7 +21,7 @@ h4{
     font-size: .4rem;
     text-align: center;
     color: dimgray;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 .score span{
     color: gold;
@@ -53,6 +54,9 @@ h4{
     font-size: 1rem;
     font-weight: bold;
 }
+.active{
+    background-color: rgb(218, 213, 213);
+}
 .glory{
     box-shadow: 0 0 1rem yellow;
 }
@@ -74,18 +78,18 @@ h4{
 .item-num-64{
     color: rgb(177, 235, 19);
 }
-.item-num-8{
+.item-num-128{
     color: rgb(73, 90, 247);
 }
-.item-num-8{
+.item-num-256{
     color: rgb(223, 114, 13);
 }
-.item-num-8{
+.item-num-512{
     color: rgb(81, 91, 240);
 }
-.item-num-8{
+.item-num-1024{
     color: rgb(24, 196, 187);
 }
-.item-num-8{
+.item-num-2048{
     color: rgb(228, 41, 172);
 }
