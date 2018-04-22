@@ -1,6 +1,5 @@
-var array;
 //初始化
-
+var array;
 //备选数字2,4
 var gen_nums = [2, 4];
 function init() {
@@ -10,7 +9,7 @@ function init() {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ];
-    $(".score").text(0); //分数置0
+    $(".score").text(0); //初始得分为0
 
     var content = $("#game-field .content");
     var bgs = "";
@@ -27,7 +26,6 @@ function pickup(seed) {
     return Math.floor(Math.random() * seed);
 }
 function generate() {
-    //空格全满之后弹出函数
     var count = 0;
     for (var i = 0; i < array.length; i++) {
         for (var j = 0; j < array[i].length; j++) {
@@ -36,23 +34,24 @@ function generate() {
             }
         }
     }
+    //若全满则退出
     if (count == 16) {
         return;
     }
     //若为空随机填入2或4
-    while (1) {
+    while (true) {
         var i = pickup(4);
         var j = pickup(4);
-        var cell = array[i][j];
-        if (cell) {
+        var box = array[i][j];
+        if (box) {
             continue;
         }
         var num = gen_nums[pickup(2)];
         array[i][j] = num;
-        cell = "<div class='cell row" + i + " col" + j + "'>" + num + "</div>"
-        cell = $(cell); 
-        changeStyle(cell); 
-        $("#game-field .content").append(cell);
+        box = "<div class='box row" + i + " col" + j + "'>" + num + "</div>"
+        box = $(box); 
+        changeStyle(box); 
+        $("#game-field .content").append(box);
         break;
     }
 }
@@ -71,10 +70,10 @@ var colors = [
     "rgb(228, 41, 172)", //2048
 ];
 
-function changeStyle(cell) {
-    var num = cell.text();
+function changeStyle(box) {
+    var num = box.text();
     var backgroundcolor = colors[(Math.log(num) / Math.log(2)) - 1];
-    cell.css({
+    box.css({
         "background-color": backgroundcolor,
         "font-size": num >= 1024 ? "40px" : "",
         "color": num <= 4 ? "" : "white"
@@ -87,27 +86,27 @@ function calcScore(score) {
         $("#game-field .controller .score").text() * 1 + score);
 }
 
-function findCell(i, j) {
-    return $("#game-field .content .cell.row" + i + ".col" + j);
+function posFinder(i, j) {
+    return $("#game-field .content .box.row" + i + ".col" + j);
 }
 
-function isDead() {
+function isGameover() {
     for (var i = 0; i < array.length; i++) {
         for (var j = 0; j < array[i].length; j++) {
-            var cell = array[i][j];
-            if (!cell) {
+            var box = array[i][j];
+            if (!box) {
                 return false;
             }
-            if (i - 1 >= 0 && cell == array[i - 1][j]) {
+            if (i - 1 >= 0 && box == array[i - 1][j]) {
                 return false;
             }
-            if (i + 1 < array.length && cell == array[i + 1][j]) {
+            if (i + 1 < array.length && box == array[i + 1][j]) {
                 return false;
             }
-            if (j - 1 >= 0 && cell == array[i][j - 1]) {
+            if (j - 1 >= 0 && box == array[i][j - 1]) {
                 return false;
             }
-            if (j + 1 < array[i].length && cell == array[i][j + 1]) {
+            if (j + 1 < array[i].length && box == array[i][j + 1]) {
                 return false;
             }
         }
@@ -115,7 +114,7 @@ function isDead() {
     return true;
 }
 
-function leftAction() {
+function leftHandler() {
     var count = 0;
     for (var i = 0; i < array.length; i++) {
         for (var j = 0; j < array.length; j++) {
@@ -130,7 +129,7 @@ function leftAction() {
     return count;
 }
 
-function topAction() {
+function upHandler() {
     var count = 0;
     for (var j = 0; j < array[0].length; j++) {
         for (var i = 1; i < array.length; i++) {
@@ -145,7 +144,7 @@ function topAction() {
     return count;
 }
 
-function rightAction() {
+function rightHandler() {
     var count = 0;
     for (var i = 0; i < array.length; i++) {
         for (var j = array[i].length - 2; j >= 0; j--) {
@@ -160,7 +159,7 @@ function rightAction() {
     return count;
 }
 
-function bottomAction() {
+function downHandler() {
     var count = 0;
     for (var j = 0; j < array[0].length; j++) {
         for (var i = 2; i >= 0; i--) {
@@ -187,19 +186,19 @@ function moveTop(i, j) { //进入函数说明 列固定，动行数
                 isMoved = true;
                 //TODO 设置分数
                 calcScore(curr);
-                findCell(k, j).remove();
-                var cell = findCell(i, j)
+                posFinder(k, j).remove();
+                var box = posFinder(i, j)
                     .removeClass("row" + i)
                     .addClass("row" + k)
                     .text(curr + pre);
-                changeStyle(cell);
+                changeStyle(box);
             } else { //如果数字不相等
                 if (!array[k + 1][j]) { //如果检查位置为0
                     isMoved = true;
                     array[i][j] = 0; //原来的位置设置成0
                     array[k + 1][j] = pre; //检查位置设置成pre
 
-                    cell = findCell(i, j)
+                    box = posFinder(i, j)
                         .removeClass("row" + i)
                         .addClass("row" + (k + 1));
                 }
@@ -213,7 +212,7 @@ function moveTop(i, j) { //进入函数说明 列固定，动行数
     //前面都是0
     array[i][j] = 0;
     array[0][j] = pre;
-    var cell = findCell(i, j).removeClass("row" + i)
+    var box = posFinder(i, j).removeClass("row" + i)
         .addClass("row0");
     return isMoved;
 }
@@ -231,18 +230,18 @@ function moveLeft(row, i, j) {
                 //TODO 设置分数
                 calcScore(curr);
 
-                findCell(i, k).remove();
-                var cell = findCell(i, j)
+                posFinder(i, k).remove();
+                var box = posFinder(i, j)
                     .removeClass("col" + j)
                     .addClass("col" + k)
                     .text(curr + pre);
-                changeStyle(cell);
+                changeStyle(box);
             } else {
                 if (!row[k + 1]) {
                     isMoved = true;
                     row[j] = 0;
                     row[k + 1] = pre;
-                    cell = findCell(i, j)
+                    box = posFinder(i, j)
                         .removeClass("col" + j)
                         .addClass("col" + (k + 1));
                 }
@@ -256,7 +255,7 @@ function moveLeft(row, i, j) {
     //前面都是0
     row[j] = 0;
     row[0] = pre;
-    var cell = findCell(i, j).removeClass("col" + j)
+    var box = posFinder(i, j).removeClass("col" + j)
         .addClass("col0");
 
     return isMoved;
@@ -274,18 +273,18 @@ function moveRight(row, i, j) {
                 isMoved = true;
                 //TODO 设置分数
                 calcScore(curr);
-                findCell(i, k).remove();
-                var cell = findCell(i, j)
+                posFinder(i, k).remove();
+                var box = posFinder(i, j)
                     .removeClass("col" + j)
                     .addClass("col" + k)
                     .text(curr + pre);
-                changeStyle(cell);
+                changeStyle(box);
             } else {
                 if (!row[k - 1]) {
                     isMoved = true;
                     row[j] = 0;
                     row[k - 1] = pre;
-                    cell = findCell(i, j)
+                    box = posFinder(i, j)
                         .removeClass("col" + j)
                         .addClass("col" + (k - 1));
                 }
@@ -299,7 +298,7 @@ function moveRight(row, i, j) {
     //前面都是0
     row[j] = 0;
     row[row.length - 1] = pre;
-    var cell = findCell(i, j).removeClass("col" + j)
+    var box = posFinder(i, j).removeClass("col" + j)
         .addClass("col3");
 
     return isMoved;
@@ -315,21 +314,21 @@ function moveBottom(i, j) {
                 array[i][j] = 0; //原来位置置零
                 array[k][j] = curr + pre; //检查位置数字相加
                 isMoved = true;
-                //TODO 设置分数
+                // 设置分数
                 calcScore(curr);
-                findCell(k, j).remove();
-                var cell = findCell(i, j)
+                posFinder(k, j).remove();
+                var box = posFinder(i, j)
                     .removeClass("row" + i)
                     .addClass("row" + k)
                     .text(curr + pre);
-                changeStyle(cell);
+                changeStyle(box);
             } else { //如果数字不相等
                 if (!array[k - 1][j]) {
                     isMoved = true;
                     array[i][j] = 0; //原来的位置设置成0
                     array[k - 1][j] = pre; //检查位置设置成pre
 
-                    cell = findCell(i, j)
+                    box = posFinder(i, j)
                         .removeClass("row" + i)
                         .addClass("row" + (k - 1));
                 }
@@ -343,7 +342,7 @@ function moveBottom(i, j) {
     //前面都是0
     array[i][j] = 0;
     array[3][j] = pre;
-    var cell = findCell(i, j).removeClass("row" + i)
+    var box = posFinder(i, j).removeClass("row" + i)
         .addClass("row3");
     return isMoved;
 }
@@ -357,36 +356,34 @@ $(function () {
     //监听
     $(window).on("keydown", function (e) {
         var keyCode = e.keyCode;
-        var keyChar = String.fromCharCode(keyCode)
-            .toLocaleUpperCase(); //转换大写
-        if (keyChar == "A" || keyCode == 37) {
-            if (leftAction()) {
+        if ( keyCode == 37) {
+            if (leftHandler()) {
                 generate();
-                if (isDead() == true) {
+                if (isGameover() == true) {
                     alert("game over");
                     return;
                 }
             }
-        } else if (keyChar == "W" || keyCode == 38) {
-            if (topAction()) {
+        } else if ( keyCode == 38) {
+            if (upHandler()) {
                 generate();
-                if (isDead() == true) {
+                if (isGameover() == true) {
                     alert("game over");
                     return;
                 }
             }
-        } else if (keyChar == "D" || keyCode == 39) {
-            if (rightAction()) {
+        } else if ( keyCode == 39) {
+            if (rightHandler()) {
                 generate();
-                if (isDead() == true) {
+                if (isGameover() == true) {
                     alert("game over");
                     return;
                 }
             }
-        } else if (keyChar == "S" || keyCode == 40) {
-            if (bottomAction()) {
+        } else if ( keyCode == 40) {
+            if (downHandler()) {
                 generate();
-                if (isDead() == true) {
+                if (isGameover() == true) {
                     alert("game over");
                     return;
                 }

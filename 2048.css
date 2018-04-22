@@ -36,7 +36,7 @@
         position: relative;
     }
     #game-field .content .back-layer,
-    #game-field .content .cell{
+    #game-field .content .box{
         position: absolute;
         width:2.6rem;
         height:2.6rem;
@@ -44,7 +44,7 @@
         border-radius:.1rem;
         transition:200ms;
     }
-    #game-field .content .cell{
+    #game-field .content .box{
         background-color: #ffcb38;
         opacity:.8;
         font-size:60px;
