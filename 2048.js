@@ -1,37 +1,37 @@
-var cells;
-//铺背景方块
+var array;
+//初始化
+
+//备选数字2,4
+var gen_nums = [2, 4];
 function init() {
-    cells = [
+    array = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ];
-    $("#game-field .controller .score").text(0); //分数置0
+    $(".score").text(0); //分数置0
 
     var content = $("#game-field .content");
     var bgs = "";
     for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 4; j++) {
-            bgs += "<div class = 'bg-cell row" + i + " col" + j + "'></div>";
+            bgs += "<div class = 'back-layer row" + i + " col" + j + "'></div>";
         }
     }
     content.html(bgs);
-    random_cell();
+    generate();
 }
-//获取一个随机数
+//生成随机数
 function pickup(seed) {
     return Math.floor(Math.random() * seed);
 }
-//生成一个随机数字方块
-nums = [2, 4];
-
-function random_cell() {
+function generate() {
     //空格全满之后弹出函数
     var count = 0;
-    for (var i = 0; i < cells.length; i++) {
-        for (var j = 0; j < cells[i].length; j++) {
-            if (cells[i][j]) {
+    for (var i = 0; i < array.length; i++) {
+        for (var j = 0; j < array[i].length; j++) {
+            if (array[i][j]) {
                 count++;
             }
         }
@@ -39,18 +39,16 @@ function random_cell() {
     if (count == 16) {
         return;
     }
-    //判断空格是不是空的填2或4
+    //若为空随机填入2或4
     while (1) {
         var i = pickup(4);
-        console.log(i);
         var j = pickup(4);
-        console.log(j);
-        var cell = cells[i][j];
+        var cell = array[i][j];
         if (cell) {
             continue;
         }
-        var num = nums[pickup(2)];
-        cells[i][j] = num;
+        var num = gen_nums[pickup(2)];
+        array[i][j] = num;
         cell = "<div class='cell row" + i + " col" + j + "'>" + num + "</div>"
         cell = $(cell); 
         changeStyle(cell); 
@@ -84,7 +82,7 @@ function changeStyle(cell) {
 
 }
 
-function setScore(score) {
+function calcScore(score) {
     $("#game-field .controller .score").text(
         $("#game-field .controller .score").text() * 1 + score);
 }
@@ -94,22 +92,22 @@ function findCell(i, j) {
 }
 
 function isDead() {
-    for (var i = 0; i < cells.length; i++) {
-        for (var j = 0; j < cells[i].length; j++) {
-            var cell = cells[i][j];
+    for (var i = 0; i < array.length; i++) {
+        for (var j = 0; j < array[i].length; j++) {
+            var cell = array[i][j];
             if (!cell) {
                 return false;
             }
-            if (i - 1 >= 0 && cell == cells[i - 1][j]) {
+            if (i - 1 >= 0 && cell == array[i - 1][j]) {
                 return false;
             }
-            if (i + 1 < cells.length && cell == cells[i + 1][j]) {
+            if (i + 1 < array.length && cell == array[i + 1][j]) {
                 return false;
             }
-            if (j - 1 >= 0 && cell == cells[i][j - 1]) {
+            if (j - 1 >= 0 && cell == array[i][j - 1]) {
                 return false;
             }
-            if (j + 1 < cells[i].length && cell == cells[i][j + 1]) {
+            if (j + 1 < array[i].length && cell == array[i][j + 1]) {
                 return false;
             }
         }
@@ -119,12 +117,12 @@ function isDead() {
 
 function leftAction() {
     var count = 0;
-    for (var i = 0; i < cells.length; i++) {
-        for (var j = 0; j < cells.length; j++) {
-            if (!cells[i][j]) {
+    for (var i = 0; i < array.length; i++) {
+        for (var j = 0; j < array.length; j++) {
+            if (!array[i][j]) {
                 continue;
             }
-            if (moveLeft(cells[i], i, j)) {
+            if (moveLeft(array[i], i, j)) {
                 count++;
             }
         }
@@ -134,9 +132,9 @@ function leftAction() {
 
 function topAction() {
     var count = 0;
-    for (var j = 0; j < cells[0].length; j++) {
-        for (var i = 1; i < cells.length; i++) {
-            if (!cells[i][j]) {
+    for (var j = 0; j < array[0].length; j++) {
+        for (var i = 1; i < array.length; i++) {
+            if (!array[i][j]) {
                 continue;
             }
             if (moveTop(i, j)) {
@@ -149,12 +147,12 @@ function topAction() {
 
 function rightAction() {
     var count = 0;
-    for (var i = 0; i < cells.length; i++) {
-        for (var j = cells[i].length - 2; j >= 0; j--) {
-            if (!cells[i][j]) {
+    for (var i = 0; i < array.length; i++) {
+        for (var j = array[i].length - 2; j >= 0; j--) {
+            if (!array[i][j]) {
                 continue;
             }
-            if (moveRight(cells[i], i, j)) {
+            if (moveRight(array[i], i, j)) {
                 count++;
             }
         }
@@ -164,9 +162,9 @@ function rightAction() {
 
 function bottomAction() {
     var count = 0;
-    for (var j = 0; j < cells[0].length; j++) {
+    for (var j = 0; j < array[0].length; j++) {
         for (var i = 2; i >= 0; i--) {
-            if (!cells[i][j]) {
+            if (!array[i][j]) {
                 continue;
             }
             if (moveBottom(i, j)) {
@@ -178,17 +176,17 @@ function bottomAction() {
 }
 
 function moveTop(i, j) { //进入函数说明 列固定，动行数
-    var pre = cells[i][j]; //取当前值
+    var pre = array[i][j]; //取当前值
     var isMoved = false;
     for (var k = i - 1; k >= 0; k--) { //向上检查
-        var curr = cells[k][j]; //现在检查位置的元素
+        var curr = array[k][j]; //现在检查位置的元素
         if (curr) { //如果是有数字
             if (curr == pre) { //如果数字相等
-                cells[i][j] = 0; //原来位置置零
-                cells[k][j] = curr + pre; //检查位置数字相加
+                array[i][j] = 0; //原来位置置零
+                array[k][j] = curr + pre; //检查位置数字相加
                 isMoved = true;
                 //TODO 设置分数
-                setScore(curr);
+                calcScore(curr);
                 findCell(k, j).remove();
                 var cell = findCell(i, j)
                     .removeClass("row" + i)
@@ -196,10 +194,10 @@ function moveTop(i, j) { //进入函数说明 列固定，动行数
                     .text(curr + pre);
                 changeStyle(cell);
             } else { //如果数字不相等
-                if (!cells[k + 1][j]) { //如果检查位置为0
+                if (!array[k + 1][j]) { //如果检查位置为0
                     isMoved = true;
-                    cells[i][j] = 0; //原来的位置设置成0
-                    cells[k + 1][j] = pre; //检查位置设置成pre
+                    array[i][j] = 0; //原来的位置设置成0
+                    array[k + 1][j] = pre; //检查位置设置成pre
 
                     cell = findCell(i, j)
                         .removeClass("row" + i)
@@ -209,12 +207,12 @@ function moveTop(i, j) { //进入函数说明 列固定，动行数
             return isMoved;
         }
     }
-    if (cells[0][j] == 0) {
+    if (array[0][j] == 0) {
         isMoved = true;
     }
     //前面都是0
-    cells[i][j] = 0;
-    cells[0][j] = pre;
+    array[i][j] = 0;
+    array[0][j] = pre;
     var cell = findCell(i, j).removeClass("row" + i)
         .addClass("row0");
     return isMoved;
@@ -231,7 +229,7 @@ function moveLeft(row, i, j) {
                 row[k] = curr + pre;
                 isMoved = true;
                 //TODO 设置分数
-                setScore(curr);
+                calcScore(curr);
 
                 findCell(i, k).remove();
                 var cell = findCell(i, j)
@@ -275,7 +273,7 @@ function moveRight(row, i, j) {
                 row[k] = curr + pre;
                 isMoved = true;
                 //TODO 设置分数
-                setScore(curr);
+                calcScore(curr);
                 findCell(i, k).remove();
                 var cell = findCell(i, j)
                     .removeClass("col" + j)
@@ -308,17 +306,17 @@ function moveRight(row, i, j) {
 }
 
 function moveBottom(i, j) {
-    var pre = cells[i][j]; //取当前值
+    var pre = array[i][j]; //取当前值
     var isMoved = false;
     for (var k = i + 1; k <= 3; k++) { //向下检查
-        var curr = cells[k][j]; //现在检查位置的元素
+        var curr = array[k][j]; //现在检查位置的元素
         if (curr) { //如果是有数字
             if (curr == pre) { //如果数字相等
-                cells[i][j] = 0; //原来位置置零
-                cells[k][j] = curr + pre; //检查位置数字相加
+                array[i][j] = 0; //原来位置置零
+                array[k][j] = curr + pre; //检查位置数字相加
                 isMoved = true;
                 //TODO 设置分数
-                setScore(curr);
+                calcScore(curr);
                 findCell(k, j).remove();
                 var cell = findCell(i, j)
                     .removeClass("row" + i)
@@ -326,10 +324,10 @@ function moveBottom(i, j) {
                     .text(curr + pre);
                 changeStyle(cell);
             } else { //如果数字不相等
-                if (!cells[k - 1][j]) {
+                if (!array[k - 1][j]) {
                     isMoved = true;
-                    cells[i][j] = 0; //原来的位置设置成0
-                    cells[k - 1][j] = pre; //检查位置设置成pre
+                    array[i][j] = 0; //原来的位置设置成0
+                    array[k - 1][j] = pre; //检查位置设置成pre
 
                     cell = findCell(i, j)
                         .removeClass("row" + i)
@@ -339,12 +337,12 @@ function moveBottom(i, j) {
             return isMoved;
         }
     }
-    if (cells[3][j] == 0) {
+    if (array[3][j] == 0) {
         isMoved = true;
     }
     //前面都是0
-    cells[i][j] = 0;
-    cells[3][j] = pre;
+    array[i][j] = 0;
+    array[3][j] = pre;
     var cell = findCell(i, j).removeClass("row" + i)
         .addClass("row3");
     return isMoved;
@@ -363,7 +361,7 @@ $(function () {
             .toLocaleUpperCase(); //转换大写
         if (keyChar == "A" || keyCode == 37) {
             if (leftAction()) {
-                random_cell();
+                generate();
                 if (isDead() == true) {
                     alert("game over");
                     return;
@@ -371,7 +369,7 @@ $(function () {
             }
         } else if (keyChar == "W" || keyCode == 38) {
             if (topAction()) {
-                random_cell();
+                generate();
                 if (isDead() == true) {
                     alert("game over");
                     return;
@@ -379,7 +377,7 @@ $(function () {
             }
         } else if (keyChar == "D" || keyCode == 39) {
             if (rightAction()) {
-                random_cell();
+                generate();
                 if (isDead() == true) {
                     alert("game over");
                     return;
@@ -387,7 +385,7 @@ $(function () {
             }
         } else if (keyChar == "S" || keyCode == 40) {
             if (bottomAction()) {
-                random_cell();
+                generate();
                 if (isDead() == true) {
                     alert("game over");
                     return;

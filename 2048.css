@@ -35,7 +35,7 @@
         margin-top:.2rem;
         position: relative;
     }
-    #game-field .content .bg-cell,
+    #game-field .content .back-layer,
     #game-field .content .cell{
         position: absolute;
         width:2.6rem;
