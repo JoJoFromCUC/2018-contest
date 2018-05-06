@@ -1,19 +1,108 @@
 <!doctype html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>progress</title>
-</head>
-<body>
-    <div id="progress" class="progress"></div>
-    <script>
-    class progress{
-        constructor(id,type){
-            
+    <style>
+        .progress-rect{
+            width: 100px;
+            height: 20px;
+            background-color: darkgrey;
+            border-radius: 3px;
+            position: relative;
         }
-    }
+        .progress-rect::after{
+            position: absolute;
+            content: "";
+            top:0;
+            left:0;
+            background-color: rgb(40, 40, 228);
+        }
+        
+        .progress-ring{
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background-color: darkgray;
+        }
+        .progress-sandglass{
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-top: 60px solid darkgray;
+            border-bottom: 60px solid rgb(41, 44, 238);
+            position: relative;
+        }
+        .progress-sandglass::before{
+            content: '';
+            position: absolute;
+        }
+        .progress-sandglass::after{
+            content: '';
+            position: absolute;
+        }
+    </style>
+</head>
 
+<body>
+    <div id="progress" class="progress">
+        <input type="color"  id="back">
+        <input type="color"  id="front">
+        <input type="number"  id='percent' max='100' min='10'>
+        <input type="button" value="set">
+    </div>
+    <script>
+        class MyProgress {
+            constructor(id, type) {
+                this.container = document.getElementById('progress');
+                this.type = type || 'rect';
+            }
+            render() {
+                let temp = document.createElement('div');
+                temp.className = `progress-${this.type}`;
+                // if(this.type === 'rect'){
+                //     temp = this.progress_rect();
+                // }else if(this.type === 'ring'){
+                //     temp = this.progress_ring();
+                // }else{
+                //     temp = this.progress_sandglass();
+                // }
+                this.container.appendChild(temp);
+            }
+            handleChange(){
+                let button = this.container.querySelector('button');
+                button.onclick = (e)=>{
+                    let res = this.getParam();
+                    //修改样式与数值
+                }
+            }
+            progress_ring() {
+                let a = document.createElement('div');
+                a.className += 'progress-ring';
+                return a;
+            }
+            progress_rect() {
+                let a = document.createElement('div');
+                a.className += 'progress-rect';
+                return a;
+            }
+            progress_sandglass() {
+                let a = document.createElement('div');
+                a.className += 'progress-sandglass';
+                return a;
+            }
+            getParam(){
+                let a = this.container.querySelectorAll('input');
+                let b = Array.from(a).map((v)=>{v.value});
+                console.log(b);
+            }
+        }
+        let sample = new MyProgress('progress','rect');
+        sample.render();
     </script>
 </body>
+
 </html>
